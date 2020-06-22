@@ -2,10 +2,47 @@
 
 import sys
 
-def reach(adj, x, y):
-    #write your code here
-    return 0
+class ADJL():
+    def __init__(self, adj):
+        self.__data = adj
+        self.__visited = {k:False for k in range(0, len(adj))}
 
+    @property
+    def data(self):
+        return self.__data
+
+    @property
+    def visited(self):
+        return self.__visited
+
+    def get_edges(self, v):
+        return self.data[v]
+
+    def __str__(self):
+        result = ''
+        vertex = 0
+        for kv in self.data:
+            result += 'VERTEX:' + str(vertex) + ' Edges: ' + str(kv) +'\n'
+            vertex+=1
+        return result
+
+
+
+
+def dfs(adj, x):
+    adj.visited[x] = True
+    for v in adj.get_edges(x):
+        if not adj.visited[v]:
+            dfs(adj, v)
+
+def reach(adj, x, y):
+    adj.visited[x] = True
+    for v in adj.get_edges(x):
+        dfs(adj, v)
+
+    return int(adj.visited[y])
+
+# sys.stdin = file('../tests/a')
 if __name__ == '__main__':
     input = sys.stdin.read()
     data = list(map(int, input.split()))
@@ -18,4 +55,6 @@ if __name__ == '__main__':
     for (a, b) in edges:
         adj[a - 1].append(b - 1)
         adj[b - 1].append(a - 1)
-    print(reach(adj, x, y))
+    al = ADJL(adj)
+    # print al, x , y
+    print(reach(al, x, y))
